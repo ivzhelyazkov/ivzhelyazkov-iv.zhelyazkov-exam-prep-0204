@@ -19,9 +19,9 @@ jobs:
       with:
         node-version: 20.x
         cache: 'npm'
-    - name: Install Dependencies
+    - name: Install dependencies
       run: npm install
-    - name: Run Unit Tests
+    - name: Run unit tests
       run: npm run test:unit
     - name: Display username
       run: echo "iv.zhelyazkov"
@@ -38,11 +38,21 @@ jobs:
       with:
         node-version: 20.x
         cache: 'npm'
-    - name: Install Dependencies
+    - name: Install dependencies
       run: npm install
     - name: Install Playwright
       run: npx playwright install
-    - name: Start App
+    - name: Start app
       run: npm run start &
     - name: Run UI tests
       run: npm run test:ui
+
+  render_deploy:
+    needs: UI_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.MY_RENDER_API_KEY }}
